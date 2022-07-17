@@ -1,0 +1,6 @@
+{
+  "profile": "my-profile",
+  "region": "us-east-1",
+  "domain": "api.example.com",
+  "certificateName": "*.example.com"
+}

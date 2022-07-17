@@ -1,0 +1,42 @@
+service: feelings-product-service
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  stage: prod
+  runtime: nodejs14.x
+  profile: ${file(./serverless-variables.json):profile}
+  region: ${file(./serverless-variables.json):region}
+
+plugins:
+  - serverless-webpack
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: ${file(./serverless-variables.json):domain}
+    basePath: 'product-service'
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    certificateName:  ${file(./serverless-variables.json):certificateName}
+  webpack:
+    webpackConfig: webpack.config.js
+    includeModules: true
+
+functions:
+  getProductsList:
+    handler: src/functions/index.getProductsList
+    events:
+      - http:
+          path: /products
+          method: get
+          cors: true
+
+  getProductById:
+    handler: src/functions/index.getProductById
+    events:
+      - http:
+          path: /products/{productId}
+          method: get
+          cors: true
