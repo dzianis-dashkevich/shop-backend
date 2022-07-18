@@ -5,7 +5,9 @@
   "main": "serverless.ts",
   "scripts": {
     "test": "jest",
-    "lint": "eslint --ext .ts src test --max-warnings 0"
+    "lint": "eslint --ext .ts src test --max-warnings 0",
+    "deploy:dev": "serverless create_domain --stage dev && serverless deploy --stage dev",
+    "deploy:prod": "serverless create_domain --stage prod && serverless deploy --stage prod"
   },
   "engines": {
     "node": ">=14.15.0"
