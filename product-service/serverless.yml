@@ -17,7 +17,9 @@ provider:
         - GET
 
 plugins:
+  - serverless-auto-swagger
   - serverless-webpack
+  - serverless-offline
   - serverless-domain-manager
 
 custom:
@@ -28,6 +30,11 @@ custom:
   allowedOrigins:
     prod: ${file(./serverless-variables.json):allowedOrigins-prod}
     dev: ${file(./serverless-variables.json):allowedOrigins-dev}
+  autoswagger:
+    basePath: '/product-service'
+    host: ${self:custom.domains.${self:custom.stage}}
+    schemes:
+      - https
   customDomain:
     apiType: http
     endpointType: regional

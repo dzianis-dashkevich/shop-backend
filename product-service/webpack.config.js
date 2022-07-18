@@ -6,7 +6,7 @@ module.exports = {
     mode: lib.webpack.isLocal ? 'development' : 'production',
     entry: lib.entries,
     resolve: {
-        extensions: ['.ts'],
+        extensions: ['.ts', '.js'],
         plugins: [new TsconfigPathsPlugin()]
     },
     target: 'node',
