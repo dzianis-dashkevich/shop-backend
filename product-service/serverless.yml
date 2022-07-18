@@ -12,7 +12,7 @@ provider:
     cors:
       allowCredentials: true
       allowedOrigins:
-        - ${self:custom.allowedOrigins.${self:custom.stage}}
+        - ${self:custom.allowedOrigins.${opt:stage}}
       allowedMethods:
         - GET
 
@@ -23,7 +23,6 @@ plugins:
   - serverless-domain-manager
 
 custom:
-  stage: ${opt:stage, self:provider.stage}
   domains:
     prod: cloud-x-training-api.${file(./serverless-variables.json):domain}
     dev: cloud-x-training-dev-api.${file(./serverless-variables.json):domain}
@@ -32,15 +31,15 @@ custom:
     dev: ${file(./serverless-variables.json):allowedOrigins-dev}
   autoswagger:
     basePath: '/product-service'
-    host: ${self:custom.domains.${self:custom.stage}}
+    host: ${self:custom.domains.${opt:stage}}
     schemes:
       - https
   customDomain:
     apiType: http
     endpointType: regional
-    domainName: ${self:custom.domains.${self:custom.stage}}
+    domainName: ${self:custom.domains.${opt:stage}}
     basePath: 'product-service'
-    stage: ${self:custom.stage}
+    stage: ${opt:stage}
     createRoute53Record: true
     certificateName:  ${file(./serverless-variables.json):certificateName}
   webpack:
