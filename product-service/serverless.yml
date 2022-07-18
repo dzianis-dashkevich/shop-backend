@@ -4,7 +4,7 @@ frameworkVersion: "3"
 
 provider:
   name: aws
-  stage: prod
+  stage: ${opt:stage}
   runtime: nodejs14.x
   profile: ${file(./serverless-variables.json):profile}
   region: ${file(./serverless-variables.json):region}
