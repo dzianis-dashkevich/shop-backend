@@ -8,16 +8,32 @@ provider:
   runtime: nodejs14.x
   profile: ${file(./serverless-variables.json):profile}
   region: ${file(./serverless-variables.json):region}
+  httpApi:
+    cors:
+      allowCredentials: true
+      allowedOrigins:
+        - ${self:custom.allowedOrigins.${self:custom.stage}}
+      allowedMethods:
+        - GET
 
 plugins:
   - serverless-webpack
   - serverless-domain-manager
 
 custom:
+  stage: ${opt:stage, self:provider.stage}
+  domains:
+    prod: cloud-x-training-api.${file(./serverless-variables.json):domain}
+    dev: cloud-x-training-dev-api.${file(./serverless-variables.json):domain}
+  allowedOrigins:
+    prod: ${file(./serverless-variables.json):allowedOrigins-prod}
+    dev: ${file(./serverless-variables.json):allowedOrigins-dev}
   customDomain:
-    domainName: ${file(./serverless-variables.json):domain}
+    apiType: http
+    endpointType: regional
+    domainName: ${self:custom.domains.${self:custom.stage}}
     basePath: 'product-service'
-    stage: ${self:provider.stage}
+    stage: ${self:custom.stage}
     createRoute53Record: true
     certificateName:  ${file(./serverless-variables.json):certificateName}
   webpack:
@@ -28,15 +44,13 @@ functions:
   getProductsList:
     handler: src/functions/index.getProductsList
     events:
-      - http:
+      - httpApi:
           path: /products
-          method: get
-          cors: true
+          method: GET
 
   getProductById:
     handler: src/functions/index.getProductById
     events:
-      - http:
+      - httpApi:
           path: /products/{productId}
-          method: get
-          cors: true
+          method: GET
