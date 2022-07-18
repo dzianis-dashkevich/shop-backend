@@ -9,9 +9,11 @@ https://cloud-x-training.dzianis-dashkevich.com
 - Stages:
   - dev: 
     - service: https://cloud-x-training-dev-api.dzianis-dashkevich.com/product-service
+    - swagger: https://cloud-x-training-dev-api.dzianis-dashkevich.com/product-service/swagger
     - cors (allowed origin): http://localhost:3000
   - prod: 
     - service: https://cloud-x-training-api.dzianis-dashkevich.com/product-service
+    - swagger: https://cloud-x-training-api.dzianis-dashkevich.com/product-service/swagger
     - cors (allowed origin): https://cloud-x-training.dzianis-dashkevich.com
 - Endpoints:
   - Get All Products: `/products`
