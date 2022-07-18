@@ -15,5 +15,11 @@ https://cloud-x-training.dzianis-dashkevich.com
     - cors (allowed origin): https://cloud-x-training.dzianis-dashkevich.com
 - Endpoints:
   - Get All Products: `/products`
+    - Url Examples:
+      - dev stage: https://cloud-x-training-dev-api.dzianis-dashkevich.com/product-service/products
+      - prod stage: https://cloud-x-training-api.dzianis-dashkevich.com/product-service/products
   - Get Product By Id: `/products/{productId}`
     - Valid `productId` example: `7567ec4b-b10c-48c5-9345-fc73c48a80aa`
+    - Url Examples:
+      - dev stage: https://cloud-x-training-dev-api.dzianis-dashkevich.com/product-service/products/7567ec4b-b10c-48c5-9345-fc73c48a80aa
+      - prod stage: https://cloud-x-training-api.dzianis-dashkevich.com/product-service/products/7567ec4b-b10c-48c5-9345-fc73c48a80aa
