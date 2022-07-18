@@ -1,20 +1,20 @@
 {
-  "name": "shop-be",
+  "name": "shop-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dzianis-dashkevich/shop-be.git"
+    "url": "git+https://github.com/dzianis-dashkevich/shop-backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dzianis-dashkevich/shop-be/issues"
+    "url": "https://github.com/dzianis-dashkevich/shop-backend/issues"
   },
-  "homepage": "https://github.com/dzianis-dashkevich/shop-be#readme",
+  "homepage": "https://github.com/dzianis-dashkevich/shop-backend#readme",
   "devDependencies": {
     "serverless": "^3.21.0"
   }
