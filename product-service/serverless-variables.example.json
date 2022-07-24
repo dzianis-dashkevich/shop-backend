@@ -1,0 +1,8 @@
+{
+  "profile": "my-profile",
+  "region": "us-east-1",
+  "domain": "api.example.com",
+  "certificateName": "*.example.com",
+  "allowedOrigins-prod": "https://cloud-x-training.example.com",
+  "allowedOrigins-dev": "http://localhost:3000"
+}
