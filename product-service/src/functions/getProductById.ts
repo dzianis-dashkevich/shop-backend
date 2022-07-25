@@ -1,19 +1,14 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import getMockProductsList from '@libs/mock-products-list';
+import createProductFunction from '@functions/handler';
 
-export default async function getProductById (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    if (!event.pathParameters?.productId) {
-        return {
-            statusCode: 404,
-            body: JSON.stringify({ error: 'product not found' }),
-        };
-    }
-
-    try {
-        const productList = await getMockProductsList();
-        const product = productList.find(product => product.id === event.pathParameters.productId);
-
-        if (!product) {
+const getProductById = createProductFunction({
+    getQueryString: (event) => `
+            SELECT product.*, stocks.count
+            FROM product
+            JOIN stocks on product.id = stocks.product_id
+            WHERE id = '${event.pathParameters?.productId}'
+        `,
+    getApiGatewayProxyResult: (productsList) => {
+        if (!productsList.length) {
             return {
                 statusCode: 404,
                 body: JSON.stringify({ error: 'product not found' }),
@@ -22,13 +17,10 @@ export default async function getProductById (event: APIGatewayProxyEvent): Prom
 
         return {
             statusCode: 200,
-            body: JSON.stringify(product),
+            body: JSON.stringify(productsList[0]),
         };
-    } catch (e) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'failed to parse mock data' }),
-        };
-    }
-}
+    },
+});
+
+export default getProductById;
 

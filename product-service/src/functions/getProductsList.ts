@@ -1,19 +1,16 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
-import getMockProductsList from '@libs/mock-products-list';
+import createProductFunction from '@functions/handler';
 
-export default async function getProductsList (): Promise<APIGatewayProxyResult> {
-    try {
-        const productsList = await getMockProductsList();
+const getProductsList = createProductFunction({
+    getQueryString: () => `
+            SELECT product.*, stocks.count
+            FROM product
+            JOIN stocks on product.id = stocks.product_id
+        `,
+    getApiGatewayProxyResult: (productsList) => ({
+        statusCode: 200,
+        body: JSON.stringify(productsList),
+    }),
+});
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify(productsList),
-        };
-    } catch (e) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'failed to parse mock data' }),
-        };
-    }
-}
+export default getProductsList;
 
