@@ -4,5 +4,10 @@
   "domain": "api.example.com",
   "certificateName": "*.example.com",
   "allowedOrigins-prod": "https://cloud-x-training.example.com",
-  "allowedOrigins-dev": "http://localhost:3000"
+  "allowedOrigins-dev": "http://localhost:3000",
+  "pg-host": "pg-host",
+  "pg-port": "5432",
+  "pg-database": "cloud_x",
+  "pg-username": "username",
+  "pg-password": "passowrd"
 }
