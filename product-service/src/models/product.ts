@@ -5,6 +5,3 @@ export interface Product {
     title: string;
     count: number;
 }
-
-export type ProductsList = Product[];
-
