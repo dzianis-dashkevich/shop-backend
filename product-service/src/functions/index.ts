@@ -21,7 +21,7 @@ const postgresClient = new Client({
 
 const productService = new ProductService(postgresClient, console);
 
-export const getProductById = getProductByIdFunctionFactory(productService);
-export const getProductsList = getProductsListFunctionFactory(productService);
-export const createProduct = createProductFunctionFactory(productService);
+export const getProductById = getProductByIdFunctionFactory(productService, console);
+export const getProductsList = getProductsListFunctionFactory(productService, console);
+export const createProduct = createProductFunctionFactory(productService, console);
 

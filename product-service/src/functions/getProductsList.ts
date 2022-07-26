@@ -1,21 +1,16 @@
 import { ProductRepository } from '@services//productService';
 import { APIGatewayProxyEvent } from 'aws-lambda';
+import { buildServerErrorResponse, buildSuccessResponse } from '@libs/handler';
 
-export default (productRepository: ProductRepository) => async (event: APIGatewayProxyEvent) => {
-    console.log('Incoming request: ', event);
+export default (productRepository: ProductRepository, logger: Console) => async (event: APIGatewayProxyEvent) => {
+    logger.log('Incoming request: ', event);
 
     try {
         const productList = await productRepository.getProducts();
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify(productList),
-        };
+        return buildSuccessResponse(productList);
     } catch (e) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'unexpected error during database query execution' }),
-        };
+        return buildServerErrorResponse({ error: 'unexpected error during database query execution' });
     }
 };
 

@@ -2,6 +2,11 @@ import * as Joi from 'joi';
 import { ProductRepository } from '@services//productService';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { Product } from '@models/product';
+import {
+    buildInvalidRequestResponse,
+    buildServerErrorResponse,
+    buildSuccessResponse,
+} from '@libs/handler';
 
 const productSchema = Joi.object<Product>({
     description: Joi.string(),
@@ -10,8 +15,8 @@ const productSchema = Joi.object<Product>({
     count: Joi.number().required(),
 });
 
-export default (productRepository: ProductRepository) => async (event: APIGatewayProxyEvent) => {
-    console.log('Incoming request: ', event);
+export default (productRepository: ProductRepository, logger: Console) => async (event: APIGatewayProxyEvent) => {
+    logger.log('Incoming request: ', event);
 
     let rawProduct: unknown;
 
@@ -24,24 +29,15 @@ export default (productRepository: ProductRepository) => async (event: APIGatewa
     const { error, value } = productSchema.validate(rawProduct);
 
     if (error) {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ error: 'invalid product schema' }),
-        };
+        return buildInvalidRequestResponse({ error: 'invalid product schema provided' });
     }
 
     try {
         const product = await productRepository.createProduct(value);
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify(product),
-        };
+        return buildSuccessResponse(product);
     } catch (e) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'unexpected error during database query execution' }),
-        };
+        return buildServerErrorResponse({ error: 'unexpected error during database query execution' });
     }
 };
 

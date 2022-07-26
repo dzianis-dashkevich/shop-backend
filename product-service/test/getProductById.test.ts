@@ -2,10 +2,12 @@ import { APIGatewayProxyEvent } from 'aws-lambda';
 import getProductByIdFactory from '@functions/getProductById';
 import { instance, mock, when } from 'ts-mockito';
 import { ProductRepository } from '@services/productService';
+import { buildSuccessResponse } from '@libs/handler';
 
 describe('getProductById spec', () => {
     const mockProductRepository = mock<ProductRepository>();
-    const getProductById = getProductByIdFactory(instance(mockProductRepository));
+    const mockLogger = mock<Console>();
+    const getProductById = getProductByIdFactory(instance(mockProductRepository), instance(mockLogger));
 
     it('should return product by provided id', async () => {
         const mockProduct = {
@@ -24,9 +26,6 @@ describe('getProductById spec', () => {
 
         const actual = await getProductById(event);
 
-        expect(actual).toEqual({
-            body: JSON.stringify(mockProduct),
-            statusCode: 200,
-        });
+        expect(actual).toEqual(buildSuccessResponse(mockProduct));
     });
 });
