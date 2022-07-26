@@ -11,7 +11,7 @@ const responseBuilder = (statusCode: number) => (data: unknown): APIGatewayProxy
     statusCode,
     body: JSON.stringify(data),
     headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
     },
 });
 
