@@ -37,6 +37,8 @@ custom:
     dev: ${file(./serverless-variables.json):allowedOrigins-dev}
   autoswagger:
     basePath: '/product-service'
+    typefiles:
+      - './src/models.ts'
     host: ${self:custom.domains.${opt:stage}}
     schemes:
       - https
