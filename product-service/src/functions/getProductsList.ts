@@ -1,16 +1,21 @@
-import createProductFunction from '@functions/handler';
+import { ProductRepository } from '@services//productService';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 
-const getProductsList = createProductFunction({
-    getQueryString: () => `
-            SELECT product.*, stocks.count
-            FROM product
-            JOIN stocks on product.id = stocks.product_id
-        `,
-    getApiGatewayProxyResult: (productsList) => ({
-        statusCode: 200,
-        body: JSON.stringify(productsList),
-    }),
-});
+export default (productRepository: ProductRepository) => async (event: APIGatewayProxyEvent) => {
+    console.log('Incoming request: ', event);
 
-export default getProductsList;
+    try {
+        const productList = await productRepository.getProducts();
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify(productList),
+        };
+    } catch (e) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'unexpected error during database query execution' }),
+        };
+    }
+};
 
