@@ -1,6 +1,7 @@
 const { resolve } = require('path');
 const { lib }  = require('serverless-webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const { IgnorePlugin } = require('webpack');
 
 module.exports = {
     mode: lib.webpack.isLocal ? 'development' : 'production',
@@ -19,4 +20,9 @@ module.exports = {
             },
         ],
     },
+    plugins: [
+        new IgnorePlugin({
+            resourceRegExp: /^pg-native$/,
+        }),
+    ],
 };

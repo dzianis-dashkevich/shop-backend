@@ -8,6 +8,12 @@ provider:
   runtime: nodejs14.x
   profile: ${file(./serverless-variables.json):profile}
   region: ${file(./serverless-variables.json):region}
+  environment:
+    PG_HOST: ${file(./serverless-variables.json):pg-host}
+    PG_PORT: ${file(./serverless-variables.json):pg-port}
+    PG_DATABASE: ${file(./serverless-variables.json):pg-database}
+    PG_USERNAME: ${file(./serverless-variables.json):pg-username}
+    PG_PASSWORD: ${file(./serverless-variables.json):pg-password}
   httpApi:
     cors:
       allowCredentials: true
@@ -31,6 +37,8 @@ custom:
     dev: ${file(./serverless-variables.json):allowedOrigins-dev}
   autoswagger:
     basePath: '/product-service'
+    typefiles:
+      - './src/models.ts'
     host: ${self:custom.domains.${opt:stage}}
     schemes:
       - https
@@ -60,3 +68,9 @@ functions:
       - httpApi:
           path: /products/{productId}
           method: GET
+  createProduct:
+    handler: src/functions/index.createProduct
+    events:
+      - httpApi:
+          path: /products
+          method: POST

@@ -1,19 +1,16 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
-import getMockProductsList from '@libs/mock-products-list';
+import { ProductRepository } from '@services//productService';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { buildServerErrorResponse, buildSuccessResponse } from '@libs/handler';
 
-export default async function getProductsList (): Promise<APIGatewayProxyResult> {
+export default (productRepository: ProductRepository, logger: Console) => async (event: APIGatewayProxyEvent) => {
+    logger.log('Incoming request: ', event);
+
     try {
-        const productsList = await getMockProductsList();
+        const productList = await productRepository.getProducts();
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify(productsList),
-        };
+        return buildSuccessResponse(productList);
     } catch (e) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'failed to parse mock data' }),
-        };
+        return buildServerErrorResponse({ error: 'unexpected error during database query execution' });
     }
-}
+};
 

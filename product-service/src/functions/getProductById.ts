@@ -1,34 +1,32 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import getMockProductsList from '@libs/mock-products-list';
+import { ProductRepository } from '@services//productService';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import {
+    buildInvalidRequestResponse,
+    buildNotFoundResponse,
+    buildServerErrorResponse,
+    buildSuccessResponse,
+} from '@libs/handler';
 
-export default async function getProductById (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    if (!event.pathParameters?.productId) {
-        return {
-            statusCode: 404,
-            body: JSON.stringify({ error: 'product not found' }),
-        };
+export default (productRepository: ProductRepository, logger: Console) => async (event: APIGatewayProxyEvent) => {
+    logger.log('Incoming request: ', event);
+
+    const { productId } = event.pathParameters;
+
+    if (!productId) {
+        return buildInvalidRequestResponse({ error: 'invalid product id provided' });
+
     }
 
     try {
-        const productList = await getMockProductsList();
-        const product = productList.find(product => product.id === event.pathParameters.productId);
+        const product = await productRepository.getProductById(productId);
 
         if (!product) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({ error: 'product not found' }),
-            };
+            return buildNotFoundResponse({ error: 'product not found' });
         }
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify(product),
-        };
+        return buildSuccessResponse(product);
     } catch (e) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'failed to parse mock data' }),
-        };
+        return buildServerErrorResponse({ error: 'unexpected error during database query execution' });
     }
-}
+};
 

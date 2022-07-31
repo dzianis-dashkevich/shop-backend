@@ -9,3 +9,7 @@ jspm_packages
 .esbuild
 
 serverless-variables.json
+
+.webpack
+
+swagger
