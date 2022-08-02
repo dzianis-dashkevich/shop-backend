@@ -12,7 +12,7 @@ export default (importRepository: ImportRepository, logger: Console) => async (e
             return buildInvalidRequestResponse({ error: 'invalid folder name provided' });
         }
 
-        const url = await importRepository.getCatalogSignedUrl(name);
+        const url = await importRepository.getFolderSignedUrl(name);
 
         return buildSuccessResponse({ url });
     } catch (e) {
