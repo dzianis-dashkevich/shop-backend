@@ -1,6 +1,6 @@
 import { ImportRepository } from '@services/importService';
 import { S3Event } from 'aws-lambda';
-import { buildServerErrorResponse, buildSuccessResponse } from '../lib/handler';
+import { buildServerErrorResponse, buildSuccessResponse } from '@libs/handler';
 
 export default (importRepository: ImportRepository, logger: Console) => async (event: S3Event) => {
     logger.log('received event: ', event);
