@@ -2,9 +2,8 @@ import { S3 } from 'aws-sdk';
 import csv from 'csv-parser';
 
 export interface ImportRepository {
-  getFolderSignedUrl(folderName: string): Promise<string>;
+  createSignedUrlForFile(fileName: string): Promise<string>;
   parseAndMoveUploadedCsv(fileName: string): Promise<void>;
-
 }
 
 export default class ImportService implements ImportRepository {
@@ -16,10 +15,10 @@ export default class ImportService implements ImportRepository {
   // TODO: there should be abstraction instead of s3Clients
   constructor(private readonly s3Client: S3, private readonly bucket: string, private readonly logger: Console) {}
 
-  getFolderSignedUrl(folderName: string): Promise<string> {
+  createSignedUrlForFile(fileName: string): Promise<string> {
     return this.s3Client.getSignedUrlPromise('putObject', {
         Bucket: this.bucket,
-        Key: `${ImportService.ROOT_UPLOADED}/${folderName}`,
+        Key: `${ImportService.ROOT_UPLOADED}/${fileName}`,
         Expires: ImportService.DEFAULT_EXPIRES,
         ContentType: ImportService.FOLDER_CONTENT_TYPE,
     });

@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { ImportRepository } from '@services/importService';
-import { buildInvalidRequestResponse, buildServerErrorResponse, buildSuccessResponse } from '../lib/handler';
+import { buildInvalidRequestResponse, buildServerErrorResponse, buildSuccessResponse } from '@libs/handler';
 
 export default (importRepository: ImportRepository, logger: Console) => async (event: APIGatewayProxyEvent) => {
     logger.log('received event: ', event);
@@ -12,7 +12,7 @@ export default (importRepository: ImportRepository, logger: Console) => async (e
             return buildInvalidRequestResponse({ error: 'invalid folder name provided' });
         }
 
-        const url = await importRepository.getFolderSignedUrl(name);
+        const url = await importRepository.createSignedUrlForFile(name);
 
         return buildSuccessResponse({ url });
     } catch (e) {
