@@ -1,0 +1,79 @@
+service: import-service
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  stage: ${opt:stage}
+  runtime: nodejs14.x
+  profile: ${file(./serverless-variables.json):profile}
+  region: ${file(./serverless-variables.json):region}
+  environment:
+    S3_REGION: ${file(./serverless-variables.json):region}
+    S3_IMPORT_BUCKET_NAME: ${file(./serverless-variables.json):bucketName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action: s3:ListBucket
+      Resource:
+        - arn:aws:s3:::${file(./serverless-variables.json):bucketName}
+    - Effect: Allow
+      Action: s3:*
+      Resource:
+        - arn:aws:s3:::${file(./serverless-variables.json):bucketName}/*
+
+  httpApi:
+    cors:
+      allowCredentials: true
+      allowedOrigins:
+        - ${self:custom.allowedOrigins.${opt:stage}}
+      allowedMethods:
+        - GET
+
+plugins:
+  - serverless-auto-swagger
+  - serverless-webpack
+  - serverless-offline
+  - serverless-domain-manager
+
+custom:
+  domains:
+    prod: cloud-x-training-api.${file(./serverless-variables.json):domain}
+    dev: cloud-x-training-dev-api.${file(./serverless-variables.json):domain}
+  allowedOrigins:
+    prod: ${file(./serverless-variables.json):allowedOrigins-prod}
+    dev: ${file(./serverless-variables.json):allowedOrigins-dev}
+  autoswagger:
+    basePath: '/import-service'
+    typefiles:
+      - './src/models.ts'
+    host: ${self:custom.domains.${opt:stage}}
+    schemes:
+      - https
+  customDomain:
+    apiType: http
+    endpointType: regional
+    domainName: ${self:custom.domains.${opt:stage}}
+    basePath: 'import-service'
+    stage: ${opt:stage}
+    createRoute53Record: true
+    certificateName:  ${file(./serverless-variables.json):certificateName}
+  webpack:
+    webpackConfig: webpack.config.js
+    includeModules: true
+
+functions:
+  importProductsFile:
+    handler: src/functions/index.importProductsFile
+    events:
+      - httpApi:
+          path: /import
+          method: GET
+  importFileParser:
+    handler: src/functions/index.importFileParser
+    events:
+      - s3:
+          bucket: ${file(./serverless-variables.json):bucketName}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploaded/
+          existing: true
