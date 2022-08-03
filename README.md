@@ -1,4 +1,3 @@
-
 ## Front-end:
 https://cloud-x-training.dzianis-dashkevich.com
 
@@ -28,3 +27,20 @@ https://cloud-x-training.dzianis-dashkevich.com
     - Url Examples:
         - dev stage: https://cloud-x-training-dev-api.dzianis-dashkevich.com/product-service/products
         - prod stage: https://cloud-x-training-api.dzianis-dashkevich.com/product-service/products
+
+### import-service
+
+- Stages:
+    - dev:
+        - service: https://cloud-x-training-dev-api.dzianis-dashkevich.com/import-service
+        - swagger: https://cloud-x-training-dev-api.dzianis-dashkevich.com/import-service/swagger
+        - cors (allowed origin): http://localhost:3000
+    - prod:
+        - service: https://cloud-x-training-api.dzianis-dashkevich.com/import-service
+        - swagger: https://cloud-x-training-api.dzianis-dashkevich.com/import-service/swagger
+        - cors (allowed origin): https://cloud-x-training.dzianis-dashkevich.com
+- Endpoints:
+    - Get signed url for file: `GET /import?name={fileName.csv}`
+        - Url Examples:
+            - dev stage: https://cloud-x-training-dev-api.dzianis-dashkevich.com/import-service/import?name=products.csv
+            - prod stage: https://cloud-x-training-api.dzianis-dashkevich.com/import-service/import?name=products.csv
