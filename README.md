@@ -42,5 +42,5 @@ https://cloud-x-training.dzianis-dashkevich.com
 - Endpoints:
     - Get signed url for file: `GET /import?name={fileName.csv}`
         - Url Examples:
-            - dev stage: https://cloud-x-training-dev-api.dzianis-dashkevich.com/import-service/import?products.csv
-            - prod stage: https://cloud-x-training-api.dzianis-dashkevich.com/import-service/import?products.csv
+            - dev stage: https://cloud-x-training-dev-api.dzianis-dashkevich.com/import-service/import?name=products.csv
+            - prod stage: https://cloud-x-training-api.dzianis-dashkevich.com/import-service/import?name=products.csv
