@@ -14,6 +14,6 @@ export default (importRepository: ImportRepository, logger: Console) => async (e
     } catch (e) {
         logger.error('Failed during file processing: ', e);
 
-        return buildServerErrorResponse({ error: 'failed to parse and move csv file' });
+        return buildServerErrorResponse({ error: 'failed to parse and move csv file.' });
     }
 };
