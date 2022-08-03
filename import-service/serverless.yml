@@ -1,4 +1,4 @@
-service: import-service
+service: feelings-import-service
 
 frameworkVersion: "3"
 
@@ -10,16 +10,16 @@ provider:
   region: ${file(./serverless-variables.json):region}
   environment:
     S3_REGION: ${file(./serverless-variables.json):region}
-    S3_IMPORT_BUCKET_NAME: ${file(./serverless-variables.json):bucketName}
+    S3_IMPORT_BUCKET_NAME: ${self:custom.buckets.${opt:stage}}
   iamRoleStatements:
     - Effect: Allow
       Action: s3:ListBucket
       Resource:
-        - arn:aws:s3:::${file(./serverless-variables.json):bucketName}
+        - arn:aws:s3:::${self:custom.buckets.${opt:stage}}
     - Effect: Allow
       Action: s3:*
       Resource:
-        - arn:aws:s3:::${file(./serverless-variables.json):bucketName}/*
+        - arn:aws:s3:::${self:custom.buckets.${opt:stage}}/*
 
   httpApi:
     cors:
@@ -36,6 +36,9 @@ plugins:
   - serverless-domain-manager
 
 custom:
+  buckets:
+    prod: cloud-x-training-import-service-bucket
+    dev: cloud-x-training-dev-import-service-bucket
   domains:
     prod: cloud-x-training-api.${file(./serverless-variables.json):domain}
     dev: cloud-x-training-dev-api.${file(./serverless-variables.json):domain}
@@ -72,8 +75,26 @@ functions:
     handler: src/functions/index.importFileParser
     events:
       - s3:
-          bucket: ${file(./serverless-variables.json):bucketName}
+          bucket: ${self:custom.buckets.${opt:stage}}
           event: s3:ObjectCreated:*
           rules:
             - prefix: uploaded/
+            - suffix: .csv
           existing: true
+
+resources:
+  Resources:
+    S3ImportBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.buckets.${opt:stage}}
+        CorsConfiguration:
+          CorsRules:
+            -
+              AllowedOrigins:
+                - ${self:custom.allowedOrigins.${opt:stage}}
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - PUT
+              MaxAge: 3000
