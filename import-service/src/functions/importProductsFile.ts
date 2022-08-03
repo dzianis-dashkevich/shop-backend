@@ -9,7 +9,7 @@ export default (importRepository: ImportRepository, logger: Console) => async (e
         const { name } = event.queryStringParameters;
 
         if (!name) {
-            return buildInvalidRequestResponse({ error: 'invalid folder name provided' });
+            return buildInvalidRequestResponse({ error: 'invalid file name is provided' });
         }
 
         const url = await importRepository.createSignedUrlForFile(name);
